@@ -1,19 +1,22 @@
 import { Link, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Menu, X, Hammer, Users, Briefcase, LayoutDashboard } from "lucide-react";
+import { Menu, X, Hammer, Users, Briefcase, LayoutDashboard, Globe } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-
-const navItems = [
-  { path: "/workers", label: "Find Workers", icon: Users },
-  { path: "/jobs", label: "Job Board", icon: Briefcase },
-  { path: "/register", label: "Register", icon: Hammer },
-  { path: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
-];
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useLanguage, Language } from "@/contexts/LanguageContext";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
+  const { language, setLanguage, t } = useLanguage();
+
+  const navItems = [
+    { path: "/workers", label: t.findWorkers, icon: Users },
+    { path: "/jobs", label: t.jobBoard, icon: Briefcase },
+    { path: "/register", label: t.register, icon: Hammer },
+    { path: "/dashboard", label: t.dashboard, icon: LayoutDashboard },
+  ];
 
   return (
     <nav className="sticky top-0 z-50 border-b bg-card/80 backdrop-blur-md">
@@ -45,6 +48,19 @@ const Navbar = () => {
               </Link>
             );
           })}
+          <div className="ml-2 flex items-center gap-1">
+            <Globe className="h-4 w-4 text-muted-foreground" />
+            <Select value={language} onValueChange={(v) => setLanguage(v as Language)}>
+              <SelectTrigger className="h-8 w-[100px] text-xs">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="en">English</SelectItem>
+                <SelectItem value="hi">हिन्दी</SelectItem>
+                <SelectItem value="te">తెలుగు</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
         </div>
 
         {/* Mobile toggle */}
@@ -84,6 +100,19 @@ const Navbar = () => {
                 </Link>
               );
             })}
+            <div className="mt-2 flex items-center gap-2 px-2">
+              <Globe className="h-4 w-4 text-muted-foreground" />
+              <Select value={language} onValueChange={(v) => setLanguage(v as Language)}>
+                <SelectTrigger className="h-8 flex-1 text-xs">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="en">English</SelectItem>
+                  <SelectItem value="hi">हिन्दी</SelectItem>
+                  <SelectItem value="te">తెలుగు</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
           </div>
         </motion.div>
       )}

@@ -7,8 +7,10 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import Layout from "@/components/Layout";
 import { mockJobs, SKILL_CATEGORIES, DISTRICTS } from "@/data/mockData";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const Jobs = () => {
+  const { t } = useLanguage();
   const [searchTerm, setSearchTerm] = useState("");
   const [skillFilter, setSkillFilter] = useState("");
   const [locationFilter, setLocationFilter] = useState("");
@@ -30,45 +32,45 @@ const Jobs = () => {
     <Layout>
       <div className="container mx-auto px-4 py-8">
         <div className="mb-8">
-          <h1 className="font-display text-3xl font-bold">Job & Training Board</h1>
-          <p className="mt-1 text-muted-foreground">Browse opportunities from employers, NGOs, and government programs</p>
+          <h1 className="font-display text-3xl font-bold">{t.jobTrainingBoard}</h1>
+          <p className="mt-1 text-muted-foreground">{t.jobTrainingBoardDesc}</p>
         </div>
 
         <div className="mb-6 rounded-xl border bg-card p-4">
           <div className="flex items-center gap-2 mb-3 text-sm font-medium text-muted-foreground">
-            <Filter className="h-4 w-4" /> Filters
+            <Filter className="h-4 w-4" /> {t.filters}
           </div>
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-              <Input placeholder="Search jobs..." value={searchTerm} onChange={e => setSearchTerm(e.target.value)} className="pl-9" />
+              <Input placeholder={t.searchJobs} value={searchTerm} onChange={e => setSearchTerm(e.target.value)} className="pl-9" />
             </div>
             <Select value={skillFilter} onValueChange={setSkillFilter}>
-              <SelectTrigger><SelectValue placeholder="Required Skill" /></SelectTrigger>
+              <SelectTrigger><SelectValue placeholder={t.requiredSkill} /></SelectTrigger>
               <SelectContent>
                 {SKILL_CATEGORIES.map(s => <SelectItem key={s} value={s}>{s}</SelectItem>)}
               </SelectContent>
             </Select>
             <Select value={locationFilter} onValueChange={setLocationFilter}>
-              <SelectTrigger><SelectValue placeholder="Location" /></SelectTrigger>
+              <SelectTrigger><SelectValue placeholder={t.location} /></SelectTrigger>
               <SelectContent>
                 {DISTRICTS.map(d => <SelectItem key={d} value={d}>{d}</SelectItem>)}
               </SelectContent>
             </Select>
             <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger><SelectValue placeholder="Status" /></SelectTrigger>
+              <SelectTrigger><SelectValue placeholder={t.status} /></SelectTrigger>
               <SelectContent>
-                <SelectItem value="Open">Open</SelectItem>
-                <SelectItem value="Closed">Closed</SelectItem>
+                <SelectItem value="Open">{t.open}</SelectItem>
+                <SelectItem value="Closed">{t.closed}</SelectItem>
               </SelectContent>
             </Select>
           </div>
           {(searchTerm || skillFilter || locationFilter || statusFilter) && (
-            <Button variant="ghost" size="sm" className="mt-2" onClick={clearFilters}>Clear all filters</Button>
+            <Button variant="ghost" size="sm" className="mt-2" onClick={clearFilters}>{t.clearAllFilters}</Button>
           )}
         </div>
 
-        <p className="mb-4 text-sm text-muted-foreground">{filtered.length} opportunit{filtered.length !== 1 ? "ies" : "y"} found</p>
+        <p className="mb-4 text-sm text-muted-foreground">{filtered.length} {filtered.length !== 1 ? t.opportunitiesFound : t.opportunityFound}</p>
 
         <div className="grid gap-4 sm:grid-cols-2">
           {filtered.map((job, i) => (
@@ -94,7 +96,7 @@ const Jobs = () => {
                   <Mail className="h-3.5 w-3.5 text-primary" />
                   <span className="text-muted-foreground">{job.contactInfo}</span>
                 </div>
-                <span className="text-xs text-muted-foreground">Posted: {job.createdAt}</span>
+                <span className="text-xs text-muted-foreground">{t.posted}: {job.createdAt}</span>
               </div>
             </motion.div>
           ))}
@@ -103,8 +105,8 @@ const Jobs = () => {
         {filtered.length === 0 && (
           <div className="py-20 text-center">
             <Briefcase className="mx-auto mb-3 h-10 w-10 text-muted-foreground/40" />
-            <p className="text-lg font-medium">No opportunities found</p>
-            <p className="text-muted-foreground">Try adjusting your filters</p>
+            <p className="text-lg font-medium">{t.noOpportunitiesFound}</p>
+            <p className="text-muted-foreground">{t.tryAdjustingFilters}</p>
           </div>
         )}
       </div>
