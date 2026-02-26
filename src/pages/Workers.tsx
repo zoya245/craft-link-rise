@@ -8,8 +8,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import Layout from "@/components/Layout";
 import { mockWorkers, SKILL_CATEGORIES, DISTRICTS } from "@/data/mockData";
 import { useSearchParams } from "react-router-dom";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const Workers = () => {
+  const { t } = useLanguage();
   const [searchParams] = useSearchParams();
   const initialSkill = searchParams.get("skill") || "";
   const [searchTerm, setSearchTerm] = useState("");
@@ -38,47 +40,47 @@ const Workers = () => {
     <Layout>
       <div className="container mx-auto px-4 py-8">
         <div className="mb-8">
-          <h1 className="font-display text-3xl font-bold">Find Skilled Workers</h1>
-          <p className="mt-1 text-muted-foreground">Search and connect with rural artisans and service providers</p>
+          <h1 className="font-display text-3xl font-bold">{t.findSkilledWorkers}</h1>
+          <p className="mt-1 text-muted-foreground">{t.findSkilledWorkersDesc}</p>
         </div>
 
         {/* Filters */}
         <div className="mb-6 rounded-xl border bg-card p-4">
           <div className="flex items-center gap-2 mb-3 text-sm font-medium text-muted-foreground">
-            <Filter className="h-4 w-4" /> Filters
+            <Filter className="h-4 w-4" /> {t.filters}
           </div>
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
             <div className="relative lg:col-span-2">
               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-              <Input placeholder="Search by name or skill..." value={searchTerm} onChange={e => setSearchTerm(e.target.value)} className="pl-9" />
+              <Input placeholder={t.searchByNameOrSkill} value={searchTerm} onChange={e => setSearchTerm(e.target.value)} className="pl-9" />
             </div>
             <Select value={skillFilter} onValueChange={setSkillFilter}>
-              <SelectTrigger><SelectValue placeholder="Skill Category" /></SelectTrigger>
+              <SelectTrigger><SelectValue placeholder={t.skillCategory} /></SelectTrigger>
               <SelectContent>
                 {SKILL_CATEGORIES.map(s => <SelectItem key={s} value={s}>{s}</SelectItem>)}
               </SelectContent>
             </Select>
             <Select value={locationFilter} onValueChange={setLocationFilter}>
-              <SelectTrigger><SelectValue placeholder="District" /></SelectTrigger>
+              <SelectTrigger><SelectValue placeholder={t.district} /></SelectTrigger>
               <SelectContent>
                 {DISTRICTS.map(d => <SelectItem key={d} value={d}>{d}</SelectItem>)}
               </SelectContent>
             </Select>
             <Select value={availabilityFilter} onValueChange={setAvailabilityFilter}>
-              <SelectTrigger><SelectValue placeholder="Availability" /></SelectTrigger>
+              <SelectTrigger><SelectValue placeholder={t.availability} /></SelectTrigger>
               <SelectContent>
-                <SelectItem value="Available">Available</SelectItem>
-                <SelectItem value="Busy">Busy</SelectItem>
-                <SelectItem value="Not Available">Not Available</SelectItem>
+                <SelectItem value="Available">{t.available}</SelectItem>
+                <SelectItem value="Busy">{t.busy}</SelectItem>
+                <SelectItem value="Not Available">{t.notAvailable}</SelectItem>
               </SelectContent>
             </Select>
           </div>
           {(searchTerm || skillFilter || locationFilter || availabilityFilter) && (
-            <Button variant="ghost" size="sm" className="mt-2" onClick={clearFilters}>Clear all filters</Button>
+            <Button variant="ghost" size="sm" className="mt-2" onClick={clearFilters}>{t.clearAllFilters}</Button>
           )}
         </div>
 
-        <p className="mb-4 text-sm text-muted-foreground">{filtered.length} worker{filtered.length !== 1 ? "s" : ""} found</p>
+        <p className="mb-4 text-sm text-muted-foreground">{filtered.length} {filtered.length !== 1 ? t.workersFound : t.workerFound}</p>
 
         {/* Results */}
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -102,7 +104,7 @@ const Workers = () => {
               <p className="flex items-center gap-1 text-sm text-muted-foreground mt-1">
                 <MapPin className="h-3 w-3" /> {worker.village}, {worker.district}
               </p>
-              <p className="text-xs text-muted-foreground mt-1">Experience: {worker.experienceLevel}</p>
+              <p className="text-xs text-muted-foreground mt-1">{t.experience}: {worker.experienceLevel}</p>
               <div className="mt-3 flex flex-wrap gap-1.5">
                 {worker.skills.map(s => (
                   <Badge key={s.category} variant="outline" className="text-xs">{s.category}</Badge>
@@ -122,8 +124,8 @@ const Workers = () => {
         {filtered.length === 0 && (
           <div className="py-20 text-center">
             <Search className="mx-auto mb-3 h-10 w-10 text-muted-foreground/40" />
-            <p className="text-lg font-medium">No workers found</p>
-            <p className="text-muted-foreground">Try adjusting your filters</p>
+            <p className="text-lg font-medium">{t.noWorkersFound}</p>
+            <p className="text-muted-foreground">{t.tryAdjustingFilters}</p>
           </div>
         )}
       </div>

@@ -10,8 +10,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import Layout from "@/components/Layout";
-import { mockWorkers, mockJobs, SKILL_CATEGORIES, DISTRICTS } from "@/data/mockData";
+import { mockWorkers, mockJobs, SKILL_CATEGORIES } from "@/data/mockData";
 import { useToast } from "@/hooks/use-toast";
+import { useLanguage } from "@/contexts/LanguageContext";
 import type { JobPosting } from "@/types";
 
 const availabilityIcon = (status: string) => {
@@ -22,10 +23,10 @@ const availabilityIcon = (status: string) => {
 
 const Dashboard = () => {
   const { toast } = useToast();
+  const { t } = useLanguage();
   const [jobs, setJobs] = useState<JobPosting[]>(mockJobs);
   const [dialogOpen, setDialogOpen] = useState(false);
 
-  // New job form
   const [jobTitle, setJobTitle] = useState("");
   const [jobDesc, setJobDesc] = useState("");
   const [jobSkill, setJobSkill] = useState("");
@@ -35,7 +36,7 @@ const Dashboard = () => {
   const handlePostJob = (e: React.FormEvent) => {
     e.preventDefault();
     if (!jobTitle || !jobDesc || !jobSkill || !jobLocation || !jobContact) {
-      toast({ title: "Please fill all fields", variant: "destructive" });
+      toast({ title: t.pleaseFillAll, variant: "destructive" });
       return;
     }
     const newJob: JobPosting = {
@@ -53,7 +54,7 @@ const Dashboard = () => {
     setJobs([newJob, ...jobs]);
     setDialogOpen(false);
     setJobTitle(""); setJobDesc(""); setJobSkill(""); setJobLocation(""); setJobContact("");
-    toast({ title: "Job posted successfully!" });
+    toast({ title: t.jobPosted });
   };
 
   return (
@@ -61,30 +62,30 @@ const Dashboard = () => {
       <div className="container mx-auto px-4 py-8">
         <div className="mb-8 flex items-end justify-between">
           <div>
-            <h1 className="font-display text-3xl font-bold">Dashboard</h1>
-            <p className="mt-1 text-muted-foreground">Manage profiles and opportunities</p>
+            <h1 className="font-display text-3xl font-bold">{t.dashboardTitle}</h1>
+            <p className="mt-1 text-muted-foreground">{t.dashboardDesc}</p>
           </div>
           <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
             <DialogTrigger asChild>
-              <Button className="gap-2"><Plus className="h-4 w-4" /> Post Job</Button>
+              <Button className="gap-2"><Plus className="h-4 w-4" /> {t.postJob}</Button>
             </DialogTrigger>
             <DialogContent className="max-w-lg">
-              <DialogHeader><DialogTitle className="font-display text-xl">Post a New Opportunity</DialogTitle></DialogHeader>
+              <DialogHeader><DialogTitle className="font-display text-xl">{t.postNewOpportunity}</DialogTitle></DialogHeader>
               <form onSubmit={handlePostJob} className="space-y-4 mt-2">
-                <div><Label>Title *</Label><Input value={jobTitle} onChange={e => setJobTitle(e.target.value)} placeholder="e.g. Experienced Carpenter Needed" /></div>
-                <div><Label>Description *</Label><Textarea value={jobDesc} onChange={e => setJobDesc(e.target.value)} placeholder="Describe the opportunity..." rows={3} /></div>
+                <div><Label>{t.title} *</Label><Input value={jobTitle} onChange={e => setJobTitle(e.target.value)} placeholder="e.g. Experienced Carpenter Needed" /></div>
+                <div><Label>{t.description} *</Label><Textarea value={jobDesc} onChange={e => setJobDesc(e.target.value)} placeholder="Describe the opportunity..." rows={3} /></div>
                 <div className="grid gap-4 sm:grid-cols-2">
                   <div>
-                    <Label>Required Skill *</Label>
+                    <Label>{t.requiredSkill} *</Label>
                     <Select value={jobSkill} onValueChange={setJobSkill}>
-                      <SelectTrigger><SelectValue placeholder="Select skill" /></SelectTrigger>
+                      <SelectTrigger><SelectValue placeholder={t.selectSkillCategory} /></SelectTrigger>
                       <SelectContent>{SKILL_CATEGORIES.map(s => <SelectItem key={s} value={s}>{s}</SelectItem>)}</SelectContent>
                     </Select>
                   </div>
-                  <div><Label>Location *</Label><Input value={jobLocation} onChange={e => setJobLocation(e.target.value)} placeholder="e.g. Lucknow" /></div>
+                  <div><Label>{t.location} *</Label><Input value={jobLocation} onChange={e => setJobLocation(e.target.value)} placeholder="e.g. Lucknow" /></div>
                 </div>
-                <div><Label>Contact Info *</Label><Input value={jobContact} onChange={e => setJobContact(e.target.value)} placeholder="email or phone" /></div>
-                <Button type="submit" className="w-full">Post Opportunity</Button>
+                <div><Label>{t.contactInfo} *</Label><Input value={jobContact} onChange={e => setJobContact(e.target.value)} placeholder="email or phone" /></div>
+                <Button type="submit" className="w-full">{t.postOpportunity}</Button>
               </form>
             </DialogContent>
           </Dialog>
@@ -92,8 +93,8 @@ const Dashboard = () => {
 
         <Tabs defaultValue="workers">
           <TabsList className="mb-6">
-            <TabsTrigger value="workers" className="gap-2"><Users className="h-4 w-4" /> Workers ({mockWorkers.length})</TabsTrigger>
-            <TabsTrigger value="jobs" className="gap-2"><Briefcase className="h-4 w-4" /> Opportunities ({jobs.length})</TabsTrigger>
+            <TabsTrigger value="workers" className="gap-2"><Users className="h-4 w-4" /> {t.workers} ({mockWorkers.length})</TabsTrigger>
+            <TabsTrigger value="jobs" className="gap-2"><Briefcase className="h-4 w-4" /> {t.opportunities} ({jobs.length})</TabsTrigger>
           </TabsList>
 
           <TabsContent value="workers">
@@ -102,12 +103,12 @@ const Dashboard = () => {
                 <table className="w-full text-sm">
                   <thead>
                     <tr className="border-b bg-muted/50">
-                      <th className="px-4 py-3 text-left font-medium">Worker</th>
-                      <th className="px-4 py-3 text-left font-medium hidden sm:table-cell">Location</th>
-                      <th className="px-4 py-3 text-left font-medium">Skills</th>
-                      <th className="px-4 py-3 text-left font-medium hidden md:table-cell">Experience</th>
-                      <th className="px-4 py-3 text-left font-medium">Status</th>
-                      <th className="px-4 py-3 text-left font-medium hidden lg:table-cell">Contact</th>
+                      <th className="px-4 py-3 text-left font-medium">{t.worker}</th>
+                      <th className="px-4 py-3 text-left font-medium hidden sm:table-cell">{t.location}</th>
+                      <th className="px-4 py-3 text-left font-medium">{t.skills}</th>
+                      <th className="px-4 py-3 text-left font-medium hidden md:table-cell">{t.experience}</th>
+                      <th className="px-4 py-3 text-left font-medium">{t.status}</th>
+                      <th className="px-4 py-3 text-left font-medium hidden lg:table-cell">{t.contactInfo}</th>
                     </tr>
                   </thead>
                   <tbody>

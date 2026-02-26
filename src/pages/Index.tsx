@@ -5,16 +5,19 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import Layout from "@/components/Layout";
 import { mockWorkers, mockJobs, SKILL_CATEGORIES } from "@/data/mockData";
+import { useLanguage } from "@/contexts/LanguageContext";
 import heroBg from "@/assets/hero-bg.jpg";
 
-const stats = [
-  { label: "Skilled Workers", value: "150+", icon: Users },
-  { label: "Jobs Posted", value: "45+", icon: Briefcase },
-  { label: "Villages Connected", value: "30+", icon: MapPin },
-  { label: "Skills Mapped", value: "12", icon: Star },
-];
-
 const Index = () => {
+  const { t } = useLanguage();
+
+  const stats = [
+    { label: t.skilledWorkers, value: "150+", icon: Users },
+    { label: t.jobsPosted, value: "45+", icon: Briefcase },
+    { label: t.villagesConnected, value: "30+", icon: MapPin },
+    { label: t.skillsMapped, value: "12", icon: Star },
+  ];
+
   return (
     <Layout>
       {/* Hero */}
@@ -31,25 +34,25 @@ const Index = () => {
             className="max-w-2xl"
           >
             <Badge className="mb-4 bg-primary/90 text-primary-foreground border-none text-sm px-3 py-1">
-              🌾 Empowering Rural India
+              {t.heroTag}
             </Badge>
             <h1 className="font-display text-4xl font-bold leading-tight text-background md:text-5xl lg:text-6xl">
-              Connecting Rural Skills with Real Opportunities
+              {t.heroTitle}
             </h1>
             <p className="mt-4 text-lg text-background/80 md:text-xl">
-              GramSetu bridges the gap between skilled rural artisans and employers, NGOs & government programs seeking their talent.
+              {t.heroDesc}
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Link to="/register">
                 <Button size="lg" className="gap-2 text-base">
                   <Hammer className="h-5 w-5" />
-                  Register as Worker
+                  {t.registerAsWorker}
                 </Button>
               </Link>
               <Link to="/workers">
                 <Button size="lg" variant="secondary" className="gap-2 text-base">
                   <Search className="h-5 w-5" />
-                  Find Workers
+                  {t.findWorkersBtn}
                 </Button>
               </Link>
             </div>
@@ -84,8 +87,8 @@ const Index = () => {
       {/* Skills Grid */}
       <section className="container mx-auto px-4 py-16">
         <div className="text-center mb-10">
-          <h2 className="font-display text-3xl font-bold">Skills We Map</h2>
-          <p className="mt-2 text-muted-foreground">Discover talent across diverse rural skill categories</p>
+          <h2 className="font-display text-3xl font-bold">{t.skillsWeMap}</h2>
+          <p className="mt-2 text-muted-foreground">{t.skillsWeMapDesc}</p>
         </div>
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
           {SKILL_CATEGORIES.map((skill, i) => (
@@ -111,12 +114,12 @@ const Index = () => {
         <div className="container mx-auto px-4">
           <div className="flex items-end justify-between mb-8">
             <div>
-              <h2 className="font-display text-3xl font-bold">Featured Workers</h2>
-              <p className="mt-1 text-muted-foreground">Skilled artisans ready for opportunities</p>
+              <h2 className="font-display text-3xl font-bold">{t.featuredWorkers}</h2>
+              <p className="mt-1 text-muted-foreground">{t.featuredWorkersDesc}</p>
             </div>
             <Link to="/workers">
               <Button variant="ghost" className="gap-1">
-                View All <ArrowRight className="h-4 w-4" />
+                {t.viewAll} <ArrowRight className="h-4 w-4" />
               </Button>
             </Link>
           </div>
@@ -160,12 +163,12 @@ const Index = () => {
       <section className="container mx-auto px-4 py-16">
         <div className="flex items-end justify-between mb-8">
           <div>
-            <h2 className="font-display text-3xl font-bold">Recent Opportunities</h2>
-            <p className="mt-1 text-muted-foreground">Latest jobs and training programs</p>
+            <h2 className="font-display text-3xl font-bold">{t.recentOpportunities}</h2>
+            <p className="mt-1 text-muted-foreground">{t.recentOpportunitiesDesc}</p>
           </div>
           <Link to="/jobs">
             <Button variant="ghost" className="gap-1">
-              View All <ArrowRight className="h-4 w-4" />
+              {t.viewAll} <ArrowRight className="h-4 w-4" />
             </Button>
           </Link>
         </div>
@@ -191,15 +194,15 @@ const Index = () => {
       <section className="bg-primary text-primary-foreground">
         <div className="container mx-auto px-4 py-16 text-center">
           <h2 className="font-display text-3xl font-bold md:text-4xl">
-            Ready to Bridge the Gap?
+            {t.readyToBridge}
           </h2>
           <p className="mx-auto mt-3 max-w-xl text-primary-foreground/80">
-            Whether you're a skilled worker seeking opportunities or an employer looking for talent, GramSetu is your bridge to a better future.
+            {t.readyToBridgeDesc}
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-3">
             <Link to="/register">
               <Button size="lg" variant="secondary" className="gap-2 text-base">
-                Get Started
+                {t.getStarted}
                 <ArrowRight className="h-5 w-5" />
               </Button>
             </Link>
